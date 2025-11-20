@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{pdfpages}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[left=0mm,right=0mm,top=0mm,bottom=0mm]{geometry}
+\usepackage{environ}
+
+\setlength{\parindent}{0pt}
+\NewEnviron{existingpage}[2]{
+    \includepdf[pagecommand={
+        \thispagestyle{empty}
+        \BODY
+    }, fitpaper=true, pages=#2]{#1}
+}
+
+\begin{document}
