@@ -2,3 +2,4 @@
 testing
 *.pdf
 node_modules
+dist
