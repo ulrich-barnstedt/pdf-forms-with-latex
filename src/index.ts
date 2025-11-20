@@ -25,17 +25,16 @@ const inputFileBytes = fs.readFileSync(args.inputFile);
         const latexMappedBoundingBoxes = acroFieldsExtractor(pages[i]);
         for (let j = 0; j < latexMappedBoundingBoxes.length; j++) {
             const bounds = latexMappedBoundingBoxes[j];
+            const textBoxWidth = Math.floor(bounds[2] - bounds[0]) - (args.padding * 2);
 
             // create textblock for bounding box
             outputTex.push(`    % -------- page ${i + 1}, box ${j + 1} --------`);
             if (args.center) {
-                const textBoxWidth = Math.floor(bounds[2] - bounds[0]) - (args.padding * 2);
                 const centerX = Math.floor((bounds[0] + bounds[2]) / 2);
                 const centerY = Math.floor((bounds[1] + bounds[3]) / 2)
 
                 outputTex.push(`    \\begin{textblock*}{${textBoxWidth}mm}[0.5, 0.5](${centerX}mm, ${centerY}mm)`);
             } else {
-                const textBoxWidth = Math.floor(bounds[2] - bounds[0]) - args.padding;
                 const topLeftX = Math.floor(bounds[0]) + args.padding;
                 const topLeftY = Math.floor(bounds[1]) + topLeftOffset + args.padding;
 

@@ -1,9 +1,10 @@
 \documentclass{article}
+
+% document layout
 \usepackage{pdfpages}
 \usepackage[absolute,overlay]{textpos}
 \usepackage[left=0mm,right=0mm,top=0mm,bottom=0mm]{geometry}
 \usepackage{environ}
-
 \setlength{\parindent}{0pt}
 \NewEnviron{existingpage}[2]{
     \includepdf[pagecommand={
@@ -11,5 +12,19 @@
         \BODY
     }, fitpaper=true, pages=#2]{#1}
 }
+
+% packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{graphs, graphdrawing}
+\usegdlibrary{force}
+\usepackage{caption}
+\usepackage{cases}
+
+% custom macros
+\newcommand{\nz}{\mathbb{N}_0}
+\newcommand{\sm}{\setminus}
+\newcommand{\ra}{\Rightarrow}
 
 \begin{document}
