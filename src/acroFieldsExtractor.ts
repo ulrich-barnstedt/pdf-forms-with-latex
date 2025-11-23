@@ -19,20 +19,20 @@ export interface ExtractedField {
     object: PDFDict
 }
 
-export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[] => {
+// extract acroFields in pdf to list segmented by pages
+export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
     const pages = doc.getPages();
-    const extractedFields: ExtractedField[] = [];
 
-    for (let pageIdx = 0; pageIdx < pages.length; pageIdx++) {
-        const page = pages[pageIdx];
+    return pages.map((page, pageIdx) => {
         const width = page.getWidth();
         const height = page.getHeight();
+        const extractedFields: ExtractedField[] = [];
 
         const acroFields = page
             .node
             .Annots()!
             .asArray()
-            .map(f => doc.context.lookup(f) as PDFDict);
+            .map(ref => doc.context.lookup(ref) as PDFDict);
 
         for (const acroField of acroFields) {
             const boundingBox = (acroField.get(PDFName_Rect) as PDFArray)
@@ -48,7 +48,7 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[] => {
             const bottomRightX = (o_bx / width) * targetWidth;
             const bottomRightY = ((height - o_ty) / height) * targetHeight;
 
-            const segmentText = (acroField.get(PDFName.of("T")) as PDFString)
+            const segmentText = (acroField.get(PDFName_T) as PDFString)
                 .decodeText()
                 [0];
 
@@ -64,7 +64,7 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[] => {
                 segment: segmentText
             });
         }
-    }
 
-    return extractedFields;
+        return extractedFields;
+    });
 }

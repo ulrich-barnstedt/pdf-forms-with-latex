@@ -15,17 +15,19 @@ export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: Extrac
         }
     }
 
+    // begin page
     tex.appendLinesTo(targetSegment, [
         `% -------- page ${pageIdx + 1} --------`,
         `\\begin{existingpage}{${args.latexInputFile}}{${pageIdx + 1}}`
     ]);
 
-    for (let j = 0; j < boxesOnPage.length; j++) {
-        const box = boxesOnPage[j];
+    // map each box on page
+    for (let boxIdx = 0; boxIdx < boxesOnPage.length; boxIdx++) {
+        const box = boxesOnPage[boxIdx];
         const textBoxWidth = Math.floor(box.boundingBox.bottomRightX - box.boundingBox.topLeftX) - (args.padding * 2);
 
         // create textblock for bounding box
-        tex.appendLinesTo(targetSegment, [`    % -------- page ${pageIdx + 1}, box ${j + 1} --------`]);
+        tex.appendLinesTo(targetSegment, [`    % -------- page ${pageIdx + 1}, box ${boxIdx + 1} --------`]);
         if (args.center) {
             const centerX = Math.floor((box.boundingBox.topLeftX + box.boundingBox.bottomRightX) / 2);
             const centerY = Math.floor((box.boundingBox.topLeftY + box.boundingBox.bottomRightY) / 2)
@@ -42,7 +44,7 @@ export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: Extrac
             `    \\end{textblock*}`
         ])
 
-        if (j !== boxesOnPage.length - 1) {
+        if (boxIdx !== boxesOnPage.length - 1) {
             tex.appendLinesTo(targetSegment, [""]);
         }
     }
