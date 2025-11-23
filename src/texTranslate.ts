@@ -1,0 +1,56 @@
+import {MultifileTex} from "./multifileTex";
+import {ExtractedField} from "./acroFieldsExtractor";
+import {Arguments} from "./arguments";
+
+const topLeftOffset = 2;
+
+export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: ExtractedField[], pageIdx: number, args: Arguments) => {
+    const segments = new Set(boxesOnPage.map(b => b.segment));
+    const targetSegment = segments.values().next().value ?? tex.mainFile;
+
+    if (!args.singleFile) {
+        // check if all boxes are in same segment, else print warning
+        if (segments.size > 1) {
+            console.error(`WARN: at page ${pageIdx}, elements were not separated by segment, due to multiple segments on one page`);
+        }
+    }
+
+    tex.appendLinesTo(targetSegment, [
+        `% -------- page ${pageIdx + 1} --------`,
+        `\\begin{existingpage}{${args.latexInputFile}}{${pageIdx + 1}}`
+    ]);
+
+    for (let j = 0; j < boxesOnPage.length; j++) {
+        const box = boxesOnPage[j];
+        const textBoxWidth = Math.floor(box.boundingBox.bottomRightX - box.boundingBox.topLeftX) - (args.padding * 2);
+
+        // create textblock for bounding box
+        tex.appendLinesTo(targetSegment, [`    % -------- page ${pageIdx + 1}, box ${j + 1} --------`]);
+        if (args.center) {
+            const centerX = Math.floor((box.boundingBox.topLeftX + box.boundingBox.bottomRightX) / 2);
+            const centerY = Math.floor((box.boundingBox.topLeftY + box.boundingBox.bottomRightY) / 2)
+
+            tex.appendLinesTo(targetSegment, [`    \\begin{textblock*}{${textBoxWidth}mm}[0.5, 0.5](${centerX}mm, ${centerY}mm)`]);
+        } else {
+            const topLeftX = Math.floor(box.boundingBox.topLeftX) + args.padding;
+            const topLeftY = Math.floor(box.boundingBox.topLeftY) + topLeftOffset + args.padding;
+
+            tex.appendLinesTo(targetSegment, [`    \\begin{textblock*}{${textBoxWidth}mm}[0, 0](${topLeftX}mm, ${topLeftY}mm)`]);
+        }
+        tex.appendLinesTo(targetSegment, [
+            " ".repeat(8),
+            `    \\end{textblock*}`
+        ])
+
+        if (j !== boxesOnPage.length - 1) {
+            tex.appendLinesTo(targetSegment, [""]);
+        }
+    }
+
+    // end page
+    tex.appendLinesTo(targetSegment, [
+        "\\end{existingpage}",
+        "",
+        ""
+    ]);
+}

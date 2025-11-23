@@ -2,10 +2,10 @@ import util from "node:util";
 
 export interface Arguments {
     padding: number,
-    stdout: boolean,
     center: boolean,
     latexInputFile: string,
-    inputFile: string
+    inputFile: string,
+    singleFile: boolean
 }
 
 export const getArguments = () : Arguments => {
@@ -14,12 +14,7 @@ export const getArguments = () : Arguments => {
             padding: {
                 type: "string",
                 short: "p",
-                default: "0"
-            },
-            stdout: {
-                type: "boolean",
-                short: "s",
-                default: false
+                default: "4"
             },
             center: {
                 type: "boolean",
@@ -29,6 +24,11 @@ export const getArguments = () : Arguments => {
             latexInputFile: {
                 type: "string",
                 short: "l"
+            },
+            singleFile: {
+                type: "boolean",
+                default: false,
+                short: "o"
             }
         },
         allowPositionals: true
@@ -45,10 +45,10 @@ export const getArguments = () : Arguments => {
 
     return {
         center: args.values.center,
-        stdout: args.values.stdout,
         inputFile: args.positionals[0],
         padding,
-        latexInputFile: args.values.latexInputFile ? args.values.latexInputFile : args.positionals[0]
+        latexInputFile: args.values.latexInputFile ? args.values.latexInputFile : args.positionals[0],
+        singleFile: args.values.singleFile
     }
 }
 
