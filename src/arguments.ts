@@ -5,7 +5,7 @@ export interface Arguments {
     center: boolean,
     latexInputFile: string,
     inputFile: string,
-    singleFile: boolean
+    segment: boolean
 }
 
 export const getArguments = () : Arguments => {
@@ -25,10 +25,10 @@ export const getArguments = () : Arguments => {
                 type: "string",
                 short: "l"
             },
-            singleFile: {
+            segment: {
                 type: "boolean",
                 default: false,
-                short: "o"
+                short: "s"
             }
         },
         allowPositionals: true
@@ -48,7 +48,6 @@ export const getArguments = () : Arguments => {
         inputFile: args.positionals[0],
         padding,
         latexInputFile: args.values.latexInputFile ? args.values.latexInputFile : args.positionals[0],
-        singleFile: args.values.singleFile
+        segment: args.values.segment
     }
 }
-

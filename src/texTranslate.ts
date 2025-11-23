@@ -8,7 +8,7 @@ export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: Extrac
     const segments = new Set(boxesOnPage.map(b => b.segment));
     const targetSegment = tex.toSegment(segments.values().next().value);
 
-    if (!args.singleFile) {
+    if (args.segment) {
         // check if all boxes are in same segment, else print warning
         if (segments.size > 1) {
             console.error(`WARN: at page ${pageIdx}, elements were not separated by segment, due to multiple segments on one page`);
