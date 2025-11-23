@@ -32,3 +32,8 @@ Optional arguments:
 | `--center`                | `-c`       |                      | Center text in textboxes instead of aligning top-left                                                      |
 | `--latexInputFile <file>` | `-l`       | <same as input file> | Override the filename passed to the latex template (by default the filename is the same as the input file) |
 | `--segment`               | `-s`       |                      | Attempt to automatically segment form inputs into multiple latex files                                     |
+
+
+## Latex preamble
+
+The latex preamble can be modified under `tex/template-pre.tex`, for example for adding packages.
