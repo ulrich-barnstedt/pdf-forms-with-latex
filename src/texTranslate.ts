@@ -6,7 +6,7 @@ const topLeftOffset = 2;
 
 export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: ExtractedField[], pageIdx: number, args: Arguments) => {
     const segments = new Set(boxesOnPage.map(b => b.segment));
-    const targetSegment = segments.values().next().value ?? tex.mainFile;
+    const targetSegment = tex.toSegment(segments.values().next().value);
 
     if (!args.singleFile) {
         // check if all boxes are in same segment, else print warning

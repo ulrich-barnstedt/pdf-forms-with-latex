@@ -1,57 +1,75 @@
 import fs from "node:fs";
+import path from "node:path";
 
-const templatePre = fs.readFileSync("./tex/template-pre.tex", "utf-8").split("\n");
-const templatePost = fs.readFileSync("./tex/template-post.tex", "utf-8").split("\n");
+const templatePrePath = path.resolve(__dirname, "../tex/template-pre.tex");
+const templatePostPath = path.resolve(__dirname, "../tex/template-post.tex");
+const templatePre = fs.readFileSync(templatePrePath, "utf-8").split("\n");
+const templatePost = fs.readFileSync(templatePostPath, "utf-8").split("\n");
 
 export class MultifileTex {
-    private files: Record<string, string[]> = {};
+    // map retains insertion order
+    private files: Map<string, string[]> = new Map<string, string[]>();
     public readonly mainFile: string;
+    private readonly mainFileRef: string[];
     private readonly segmentIntoMultiple: boolean;
+    private lastSegment: string;
 
-    public constructor (mainFile: string, segment: boolean) {
+    public constructor (mainFile: string, segmentIntoMultiple: boolean) {
         this.mainFile = mainFile;
-        this.segmentIntoMultiple = segment;
+        this.segmentIntoMultiple = segmentIntoMultiple;
+        this.lastSegment = mainFile;
 
-        this.files[mainFile] = [
+        this.files.set(mainFile, [
             ...templatePre
-        ];
+        ]);
+        this.mainFileRef = this.files.get(mainFile)!;
+    }
+
+    public toSegment (name: string | undefined) : string {
+        if (!name) {
+            return this.lastSegment;
+        }
+
+        return this.mainFile + "-" + name;
     }
 
     public appendLinesTo (segment: string, content: string[]) {
+        this.lastSegment = segment;
+
         if (this.segmentIntoMultiple) {
-            const generatedName = this.mainFile + "-" + segment;
-            if (!(generatedName in this.files)) {
-                this.files[generatedName] = [];
+            if (!this.files.has(segment)) {
+                this.files.set(segment, []);
             }
 
-            this.files[generatedName].push(...content);
+            this.files.get(segment)!.push(...content);
         } else {
-            this.files[this.mainFile].push(...content);
+            this.mainFileRef.push(...content);
         }
-
-    }
-
-    public appendLines (content: string[]) {
-        this.files[this.mainFile].push(...content);
     }
 
     public endFile () {
         if (this.segmentIntoMultiple) {
-            this.appendLines([""]);
+            this.mainFileRef.push("");
 
-            for (const file in this.files) {
+            for (const [file, _content] of this.files) {
                 if (file === this.mainFile) continue;
-                this.files[this.mainFile].push(`\\include{${file}.tex}`);
+                this.mainFileRef.push(`\\include{${file}.tex}`);
             }
 
-            this.appendLines([""]);
+            this.mainFileRef.push("");
         }
 
-        this.files[this.mainFile].push(...templatePost);
+        this.mainFileRef.push(...templatePost);
     }
 
     public write () {
-        // TODO: write all
-        console.log(this.files);
+        console.log("Generated files:");
+
+        for (const [file, content] of this.files) {
+            const filename = file + ".tex";
+            console.log(`\t${filename}`);
+
+            fs.writeFileSync(filename, content.join("\n"));
+        }
     }
 }
