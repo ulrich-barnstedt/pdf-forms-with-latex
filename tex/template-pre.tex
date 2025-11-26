@@ -19,7 +19,7 @@
 \usepackage{amssymb}
 \usepackage{tikz}
 \usetikzlibrary{graphs, graphdrawing}
-\usegdlibrary{force}
+\usegdlibrary{force, layered, trees}
 \usepackage{caption}
 \usepackage{cases}
 
@@ -27,5 +27,30 @@
 \newcommand{\nz}{\mathbb{N}_0}
 \newcommand{\sm}{\setminus}
 \newcommand{\ra}{\Rightarrow}
+
+% tikz autolayout
+\tikzset{every node/.append style={minimum size = 0.8cm}}
+\NewEnviron{tikzfigauto}[3][spring]{
+    \begin{figure}
+        \centering
+        \caption*{#2}
+        \tikz
+        \graph [
+            #1 layout,
+            node distance=#3,
+            level distance=#3,
+            sibling distance=#3,
+            nodes = {draw, circle},
+            edges={->, rounded corners}
+        ]{
+            [parse/.expand once=\BODY]
+        };
+    \end{figure}
+}
+% available layouts: spring (default), tree, layered
+% arguments: layout, caption, spacing
+% example:
+% \begin{tikzfigauto}[tree]{test caption}{1.5cm}
+
 
 \begin{document}
