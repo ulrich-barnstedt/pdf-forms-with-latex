@@ -10,7 +10,7 @@ const inputFileBytes = fs.readFileSync(args.inputFile);
 
 (async () => {
     const outputFile = args.latexInputFile.replace(".pdf", "");
-    const tex = new MultifileTex(outputFile, args.segment);
+    const tex = new MultifileTex(outputFile);
 
     const doc = await PDFDocument.load(inputFileBytes);
     const mappedBoxesPerPage = acroFieldsExtractor(doc);
