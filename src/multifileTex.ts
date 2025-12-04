@@ -7,17 +7,17 @@ const templatePre = fs.readFileSync(templatePrePath, "utf-8").split("\n");
 const templatePost = fs.readFileSync(templatePostPath, "utf-8").split("\n");
 
 export class MultifileTex {
+    private readonly segmentIntoMultiple: boolean;
     // map retains insertion order
     private files: Map<string, string[]> = new Map<string, string[]>();
     public readonly mainFile: string;
     private readonly mainFileRef: string[];
-    private readonly segmentIntoMultiple: boolean;
-    private lastSegment: string;
+    private currentSegment: string;
 
     public constructor (mainFile: string, segmentIntoMultiple: boolean) {
         this.mainFile = mainFile;
         this.segmentIntoMultiple = segmentIntoMultiple;
-        this.lastSegment = mainFile;
+        this.currentSegment = mainFile;
 
         this.files.set(mainFile, [
             ...templatePre
@@ -27,14 +27,14 @@ export class MultifileTex {
 
     public toSegment (name: string | undefined) : string {
         if (!name) {
-            return this.lastSegment;
+            return this.currentSegment;
         }
 
         return this.mainFile + "-" + name;
     }
 
     public appendLinesTo (segment: string, content: string[]) {
-        this.lastSegment = segment;
+        this.currentSegment = segment;
 
         if (this.segmentIntoMultiple) {
             if (!this.files.has(segment)) {

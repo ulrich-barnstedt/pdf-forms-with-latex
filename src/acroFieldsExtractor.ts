@@ -15,7 +15,7 @@ export interface ExtractedField {
         bottomRightY: number
     },
     page: number,
-    segment: string,
+    title: string,
     object: PDFDict
 }
 
@@ -29,7 +29,10 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
         const extractedFields: ExtractedField[] = [];
 
         const annots = page.node.Annots();
-        if (annots === undefined) return extractedFields;
+        if (annots === undefined) {
+            console.warn(`INFO: no fields were found on page ${pageIdx + 1}`);
+            return extractedFields;
+        }
         const acroFields = annots
             .asArray()
             .map(ref => doc.context.lookup(ref) as PDFDict);
@@ -48,9 +51,7 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
             const bottomRightX = (o_bx / width) * targetWidth;
             const bottomRightY = ((height - o_ty) / height) * targetHeight;
 
-            const segmentText = (acroField.get(PDFName_T) as PDFString)
-                .decodeText()
-                [0];
+            const title = (acroField.get(PDFName_T) as PDFString)?.decodeText() ?? "?";
 
             extractedFields.push({
                 object: acroField,
@@ -61,7 +62,7 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
                     bottomRightY
                 },
                 page: pageIdx,
-                segment: segmentText
+                title: title
             });
         }
 

@@ -5,13 +5,13 @@ import {Arguments} from "./arguments";
 const topLeftOffset = 2;
 
 export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: ExtractedField[], pageIdx: number, args: Arguments) => {
-    const segments = new Set(boxesOnPage.map(b => b.segment));
+    const segments = new Set(boxesOnPage.map(b => b.title[0]));
     const targetSegment = tex.toSegment(segments.values().next().value);
 
     if (args.segment) {
         // check if all boxes are in same segment, else print warning
         if (segments.size > 1) {
-            console.error(`WARN: at page ${pageIdx}, elements were not separated by segment, due to multiple segments on one page`);
+            console.warn(`WARN: at page ${pageIdx + 1}, elements were not separated by segment, due to multiple segments on one page`);
         }
     }
 
@@ -27,7 +27,7 @@ export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: Extrac
         const textBoxWidth = Math.floor(box.boundingBox.bottomRightX - box.boundingBox.topLeftX) - (args.padding * 2);
 
         // create textblock for bounding box
-        tex.appendLinesTo(targetSegment, [`    % -------- page ${pageIdx + 1}, box ${boxIdx + 1} --------`]);
+        tex.appendLinesTo(targetSegment, [`    % -------- page ${pageIdx + 1}, box ${boxIdx + 1}, "${box.title}" --------`]);
         if (args.center) {
             const centerX = Math.floor((box.boundingBox.topLeftX + box.boundingBox.bottomRightX) / 2);
             const centerY = Math.floor((box.boundingBox.topLeftY + box.boundingBox.bottomRightY) / 2)
