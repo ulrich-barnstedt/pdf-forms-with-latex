@@ -22,14 +22,16 @@
 \usegdlibrary{force, layered, trees}
 \usepackage{caption}
 \usepackage{cases}
+\usepackage[notquote]{hanging}
+\usepackage{enumitem}
 
 % custom macros
 \newcommand{\nz}{\mathbb{N}_0}
 \newcommand{\sm}{\setminus}
 \newcommand{\ra}{\Rightarrow}
+\newcommand{\n}{\mathbb{N}}
 
 % tikz autolayout
-\tikzset{every node/.append style={minimum size = 0.8cm}}
 \NewEnviron{tikzfigauto}[3][spring]{
     \begin{figure}
         \centering
