@@ -10,56 +10,54 @@ export class MultifileTex {
     // map retains insertion order
     private files: Map<string, string[]> = new Map<string, string[]>();
     public readonly mainFile: string;
-    private readonly mainFileRef: string[];
-    private readonly segmentIntoMultiple: boolean;
-    private lastSegment: string;
+    private currentSegment: string;
 
-    public constructor (mainFile: string, segmentIntoMultiple: boolean) {
+    public constructor (mainFile: string) {
         this.mainFile = mainFile;
-        this.segmentIntoMultiple = segmentIntoMultiple;
-        this.lastSegment = mainFile;
+        this.currentSegment = mainFile;
 
         this.files.set(mainFile, [
             ...templatePre
         ]);
-        this.mainFileRef = this.files.get(mainFile)!;
     }
 
-    public toSegment (name: string | undefined) : string {
-        if (!name) {
-            return this.lastSegment;
-        }
+    public setSegment (segment: string | undefined) {
+        if (segment === undefined) return;
 
-        return this.mainFile + "-" + name;
+        let formattedSegment = this.mainFile + "-" + segment;
+        if (formattedSegment === this.currentSegment) return;
+
+        if (this.files.has(formattedSegment)) {
+            console.info(`INFO: duplicate segment "${segment}", auto-renaming`);
+        }
+        while (this.files.has(formattedSegment)) formattedSegment += "*";
+
+        this.currentSegment = formattedSegment;
     }
 
-    public appendLinesTo (segment: string, content: string[]) {
-        this.lastSegment = segment;
-
-        if (this.segmentIntoMultiple) {
-            if (!this.files.has(segment)) {
-                this.files.set(segment, []);
-            }
-
-            this.files.get(segment)!.push(...content);
-        } else {
-            this.mainFileRef.push(...content);
+    public append (content: string[]) {
+        if (!this.files.has(this.currentSegment)) {
+            this.files.set(this.currentSegment, []);
         }
+
+        this.files.get(this.currentSegment)!.push(...content);
     }
 
     public endFile () {
-        if (this.segmentIntoMultiple) {
-            this.mainFileRef.push("");
+        const mainFileRef = this.files.get(this.mainFile)!;
+
+        if (this.files.size > 1) {
+            mainFileRef.push("");
 
             for (const [file, _content] of this.files) {
                 if (file === this.mainFile) continue;
-                this.mainFileRef.push(`\\include{${file}.tex}`);
+                mainFileRef.push(`\\include{${file}.tex}`);
             }
 
-            this.mainFileRef.push("");
+            mainFileRef.push("");
         }
 
-        this.mainFileRef.push(...templatePost);
+        mainFileRef.push(...templatePost);
     }
 
     public write () {

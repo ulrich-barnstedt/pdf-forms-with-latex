@@ -25,14 +25,14 @@ This will generate the corresponding `.tex` files in the same directory.
 
 
 Optional arguments:
-
-| Argument                  | Short-form | Default                | Effect                                                                                                     |
-|---------------------------|------------|------------------------|------------------------------------------------------------------------------------------------------------|
-| `--padding <amount>`      | `-p`       | `4`                    | Set padding (in mm) to be inserted around generated textboxes                                              |
-| `--center`                | `-c`       |                        | Center text in textboxes instead of aligning top-left                                                      |
-| `--latexInputFile <file>` | `-l`       | `<same as input file>` | Override the filename passed to the latex template (by default the filename is the same as the input file) |
-| `--segment`               | `-s`       |                        | Attempt to automatically segment form inputs into multiple latex files                                     |
-
+```
+ -h, --help                   Show this help message
+ -p, --padding <amount>       Set padding (in mm, default 4) to be inserted around generated textboxes
+ -c, --center                 Center text in textboxes instead of aligning top-left
+ -l, --latexInputFile <file>  Override the filename passed to the latex template (by default the filename is the same as the input file)
+ -s, --segment                Attempt to automatically segment form inputs into multiple latex files (incompatible with --pagewise)
+ -p, --pagewise               Segment output into one latex file per page (incompatible with --segment)
+```
 
 ## Latex preamble
 
