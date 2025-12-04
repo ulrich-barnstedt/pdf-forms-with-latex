@@ -28,9 +28,9 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
         const height = page.getHeight();
         const extractedFields: ExtractedField[] = [];
 
-        const acroFields = page
-            .node
-            .Annots()!
+        const annots = page.node.Annots();
+        if (annots === undefined) return extractedFields;
+        const acroFields = annots
             .asArray()
             .map(ref => doc.context.lookup(ref) as PDFDict);
 

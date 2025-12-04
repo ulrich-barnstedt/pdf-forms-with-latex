@@ -8,7 +8,7 @@ export interface Arguments {
     segment: boolean
 }
 
-export const getArguments = () : Arguments => {
+export const parseArguments = () : Arguments => {
     const args = util.parseArgs({
         options: {
             padding: {

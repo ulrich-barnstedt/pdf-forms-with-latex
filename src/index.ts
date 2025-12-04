@@ -1,11 +1,11 @@
 import * as fs from "node:fs";
 import {PDFDocument} from "pdf-lib";
 import {acroFieldsExtractor} from "./acroFieldsExtractor";
-import {getArguments} from "./arguments";
+import {parseArguments} from "./arguments";
 import {MultifileTex} from "./multifileTex";
 import {translatePageOfBoxesToTex} from "./texTranslate";
 
-const args = getArguments();
+const args = parseArguments();
 const inputFileBytes = fs.readFileSync(args.inputFile);
 
 (async () => {
