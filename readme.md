@@ -3,6 +3,40 @@
 CLI tool for generating latex templates to fill out PDF forms.
 
 
+## Demo
+
+Assuming we want to fill this field in an arbitrary PDF form:
+![Empty form](./demo/empty.png)
+
+Running `pdfform-to-latex somePdf.pdf -x 4 -y 4` produces the following latex template:
+```latex
+% ... rest of document
+
+    % -------- page 1, box 1, "1.1.1" --------
+    \begin{textblock*}{155mm}[0, 0](34mm, 70mm)
+    
+    \end{textblock*}
+
+% ...
+```
+
+After adding some content, it could look like this:
+```latex
+    % -------- page 1, box 1, "1.1.1" --------
+    \begin{textblock*}{155mm}[0, 0](34mm, 70mm)
+        This is normal text. \\
+
+        A centered equation:
+        \begin{align*}
+            a = \sum_{i=0}^{100} i
+        \end{align*}
+    \end{textblock*}
+```
+
+Which, after compiling, looks like:
+![Filled form](./demo/filled.png)
+
+
 ## Installation
 
 To install, run the following commands after cloning the repository:
