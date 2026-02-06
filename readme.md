@@ -21,7 +21,8 @@ This assumes `./local/bin` is in your `PATH`.
 ```shell
 pdfform-to-latex <input pdf>
 ```
-This will generate the corresponding `.tex` files in the same directory.
+This will generate the corresponding `.tex` file(s) in the same directory.
+For the document to compile successfully, the source PDF file needs to be present.
 
 
 Optional arguments:
