@@ -1,4 +1,4 @@
-import {PDFArray, PDFDict, PDFDocument, PDFName, PDFNumber, PDFObject, PDFPage, PDFString} from "pdf-lib";
+import {PDFArray, PDFDict, PDFDocument, PDFName, PDFNumber, PDFObject, PDFString} from "pdf-lib";
 
 const PDFName_Rect = PDFName.of("Rect");
 const PDFName_T = PDFName.of("T");

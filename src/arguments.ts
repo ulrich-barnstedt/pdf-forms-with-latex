@@ -28,7 +28,7 @@ const helpMessages = [
     },
     {
         long: "--pagewise",
-        short: "-p",
+        short: "-n",
         description: "Segment output into one latex file per page (incompatible with --segment)"
     }
 ]

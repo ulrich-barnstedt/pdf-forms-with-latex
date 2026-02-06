@@ -1,6 +1,6 @@
 # pdf-forms-with-latex
 
-CLI tool for generating latex-templates to fill out PDF forms.
+CLI tool for generating latex templates to fill out PDF forms.
 
 
 ## Installation
@@ -31,7 +31,7 @@ Optional arguments:
  -c, --center                 Center text in textboxes instead of aligning top-left
  -l, --latexInputFile <file>  Override the filename passed to the latex template (by default the filename is the same as the input file)
  -s, --segment                Attempt to automatically segment form inputs into multiple latex files (incompatible with --pagewise)
- -p, --pagewise               Segment output into one latex file per page (incompatible with --segment)
+ -n, --pagewise               Segment output into one latex file per page (incompatible with --segment)
 ```
 
 ## Latex preamble
