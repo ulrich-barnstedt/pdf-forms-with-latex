@@ -1,11 +1,10 @@
 import {PDFArray, PDFDict, PDFDocument, PDFName, PDFNumber, PDFObject, PDFString} from "pdf-lib";
+import {Arguments} from "./arguments";
 
 const PDFName_Rect = PDFName.of("Rect");
 const PDFName_T = PDFName.of("T");
-
-// paper height/width in mm
-const targetWidth = 210;
-const targetHeight = 297;
+// postscript-points to millimeters
+const ptsToMm = 25.4 / 72;
 
 export interface ExtractedField {
     boundingBox: {
@@ -19,12 +18,11 @@ export interface ExtractedField {
     object: PDFDict
 }
 
-// extract acroFields in pdf to list segmented by pages
-export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
+// extract acroFields to list segmented by pages
+export const acroFieldsExtractor = (doc: PDFDocument, args: Arguments): ExtractedField[][] => {
     const pages = doc.getPages();
 
     return pages.map((page, pageIdx) => {
-        const width = page.getWidth();
         const height = page.getHeight();
         const extractedFields: ExtractedField[] = [];
 
@@ -41,15 +39,18 @@ export const acroFieldsExtractor = (doc: PDFDocument): ExtractedField[][] => {
             const boundingBox = (acroField.get(PDFName_Rect) as PDFArray)
                 .asArray()
                 .map((v: PDFObject) => (v as PDFNumber).asNumber());
+            const [pts_topX, pts_topY, pts_bottomX, pts_bottomY] = boundingBox;
 
-            const [o_tx, o_ty, o_bx, o_by] = boundingBox;
-            const area = (o_bx - o_tx) * (o_by - o_ty);
-            if (area < 150) continue;
+            if (!args.allBoxes) {
+                // ignore boxes smaller than 150 pts^2 (like checkboxes)
+                const area = (pts_bottomX - pts_topX) * (pts_bottomY - pts_topY);
+                if (area < 150) continue;
+            }
 
-            const topLeftX = (o_tx / width) * targetWidth;
-            const topLeftY = ((height - o_by) / height) * targetHeight;
-            const bottomRightX = (o_bx / width) * targetWidth;
-            const bottomRightY = ((height - o_ty) / height) * targetHeight;
+            const topLeftX = pts_topX * ptsToMm;
+            const topLeftY = (height - pts_bottomY) * ptsToMm;
+            const bottomRightX = pts_bottomX * ptsToMm;
+            const bottomRightY = (height - pts_topY) * ptsToMm;
 
             const title = (acroField.get(PDFName_T) as PDFString)?.decodeText() ?? "?";
 

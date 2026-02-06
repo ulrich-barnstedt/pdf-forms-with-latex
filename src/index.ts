@@ -13,7 +13,7 @@ const inputFileBytes = fs.readFileSync(args.inputFile);
     const tex = new MultifileTex(outputFile);
 
     const doc = await PDFDocument.load(inputFileBytes);
-    const mappedBoxesPerPage = acroFieldsExtractor(doc);
+    const mappedBoxesPerPage = acroFieldsExtractor(doc, args);
 
     // process each page
     for (let i = 0; i < mappedBoxesPerPage.length; i++) {

@@ -33,6 +33,7 @@ Optional arguments:
  -l, --latexInputFile <file>  Override the filename passed to the latex template (by default the filename is the same as the input file)
  -s, --segment                Attempt to automatically segment form inputs into multiple latex files (incompatible with --pagewise)
  -n, --pagewise               Segment output into one latex file per page (incompatible with --segment)
+ -a, --all                    Include all boxes (per default too small boxes are not included)
 ```
 
 ## Latex preamble

@@ -30,6 +30,11 @@ const helpMessages = [
         long: "--pagewise",
         short: "-n",
         description: "Segment output into one latex file per page (incompatible with --segment)"
+    },
+    {
+        long: "--all",
+        short: "-a",
+        description: "Include all boxes (per default too small boxes are not included)"
     }
 ]
 
@@ -39,7 +44,8 @@ export interface Arguments {
     latexInputFile: string,
     inputFile: string,
     segment: boolean,
-    pagewise: boolean
+    pagewise: boolean,
+    allBoxes: boolean
 }
 
 export const parseArguments = () : Arguments => {
@@ -73,6 +79,11 @@ export const parseArguments = () : Arguments => {
                 type: "boolean",
                 default: false,
                 short: "h"
+            },
+            all: {
+                type: "boolean",
+                default: false,
+                short: "a"
             }
         },
         allowPositionals: true
@@ -109,6 +120,7 @@ export const parseArguments = () : Arguments => {
         padding,
         latexInputFile: args.values.latexInputFile ? args.values.latexInputFile : args.positionals[0],
         segment: args.values.segment,
-        pagewise: args.values.pagewise
+        pagewise: args.values.pagewise,
+        allBoxes: args.values.all
     }
 }
