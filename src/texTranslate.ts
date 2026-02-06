@@ -26,7 +26,7 @@ export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: Extrac
     // map each box on page
     for (let boxIdx = 0; boxIdx < boxesOnPage.length; boxIdx++) {
         const box = boxesOnPage[boxIdx];
-        const textBoxWidth = Math.floor(box.boundingBox.bottomRightX - box.boundingBox.topLeftX) - (args.padding * 2);
+        const textBoxWidth = Math.floor(box.boundingBox.bottomRightX - box.boundingBox.topLeftX) - (args.xPadding * 2);
 
         // create textblock for bounding box
         tex.append([`    % -------- page ${pageIdx + 1}, box ${boxIdx + 1}, "${box.title}" --------`]);
@@ -36,8 +36,8 @@ export const translatePageOfBoxesToTex = (tex: MultifileTex, boxesOnPage: Extrac
 
             tex.append([`    \\begin{textblock*}{${textBoxWidth}mm}[0.5, 0.5](${centerX}mm, ${centerY}mm)`]);
         } else {
-            const topLeftX = Math.floor(box.boundingBox.topLeftX) + args.padding;
-            const topLeftY = Math.floor(box.boundingBox.topLeftY) + topLeftOffset + args.padding;
+            const topLeftX = Math.floor(box.boundingBox.topLeftX) + args.xPadding;
+            const topLeftY = Math.floor(box.boundingBox.topLeftY) + topLeftOffset + args.yPadding;
 
             tex.append([`    \\begin{textblock*}{${textBoxWidth}mm}[0, 0](${topLeftX}mm, ${topLeftY}mm)`]);
         }

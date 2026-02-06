@@ -27,13 +27,14 @@ For the document to compile successfully, the source PDF file needs to be presen
 
 Optional arguments:
 ```
- -h, --help                   Show this help message
- -p, --padding <amount>       Set padding (in mm, default 4) to be inserted around generated textboxes
- -c, --center                 Center text in textboxes instead of aligning top-left
- -l, --latexInputFile <file>  Override the filename passed to the latex template (by default the filename is the same as the input file)
- -s, --segment                Attempt to automatically segment form inputs into multiple latex files (incompatible with --pagewise)
- -n, --pagewise               Segment output into one latex file per page (incompatible with --segment)
- -a, --all                    Include all boxes (per default too small boxes are not included)
+ -h, --help                        Show this help message
+ -y, --verticalPadding <amount>    Set vertical padding around textboxes (in mm, default 0)
+ -x, --horizontalPadding <amount>  Set horizontal padding around textboxes (in mm, default 1)
+ -c, --center                      Center text in textboxes instead of aligning top-left
+ -l, --latexInputFile <file>       Override the filename passed to the latex template (by default the filename is the same as the input file)
+ -s, --segment                     Attempt to automatically segment form inputs into multiple latex files (incompatible with --pagewise)
+ -p, --pagewise                    Segment output into one latex file per page (incompatible with --segment)
+ -a, --all                         Include all boxes (per default too small boxes are not included)
 ```
 
 ## Latex preamble

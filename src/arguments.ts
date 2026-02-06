@@ -7,9 +7,14 @@ const helpMessages = [
         description: "Show this help message"
     },
     {
-        long: "--padding <amount>",
-        short: "-p",
-        description: "Set padding (in mm, default 4) to be inserted around generated textboxes"
+        long: "--verticalPadding <amount>",
+        short: "-y",
+        description: "Set vertical padding around textboxes (in mm, default 0)"
+    },
+    {
+        long: "--horizontalPadding <amount>",
+        short: "-x",
+        description: "Set horizontal padding around textboxes (in mm, default 1)"
     },
     {
         long: "--center",
@@ -28,7 +33,7 @@ const helpMessages = [
     },
     {
         long: "--pagewise",
-        short: "-n",
+        short: "-p",
         description: "Segment output into one latex file per page (incompatible with --segment)"
     },
     {
@@ -39,7 +44,8 @@ const helpMessages = [
 ]
 
 export interface Arguments {
-    padding: number,
+    xPadding: number,
+    yPadding: number,
     center: boolean,
     latexInputFile: string,
     inputFile: string,
@@ -51,10 +57,15 @@ export interface Arguments {
 export const parseArguments = () : Arguments => {
     const args = util.parseArgs({
         options: {
-            padding: {
+            verticalPadding: {
                 type: "string",
-                short: "p",
-                default: "4"
+                short: "y",
+                default: "0"
+            },
+            horizontalPadding: {
+                type: "string",
+                short: "x",
+                default: "1"
             },
             center: {
                 type: "boolean",
@@ -73,7 +84,7 @@ export const parseArguments = () : Arguments => {
             pagewise: {
                 type: "boolean",
                 default: false,
-                short: "n"
+                short: "p"
             },
             help: {
                 type: "boolean",
@@ -109,15 +120,17 @@ export const parseArguments = () : Arguments => {
         throw "No input file was specified.";
     }
 
-    const padding = +args.values.padding;
-    if (isNaN(padding)) {
+    const yPadding = +args.values.verticalPadding;
+    const xPadding = +args.values.horizontalPadding;
+    if (isNaN(yPadding) || isNaN(xPadding)) {
         throw "Padding is not a valid number";
     }
 
     return {
+        xPadding,
+        yPadding,
         center: args.values.center,
         inputFile: args.positionals[0],
-        padding,
         latexInputFile: args.values.latexInputFile ? args.values.latexInputFile : args.positionals[0],
         segment: args.values.segment,
         pagewise: args.values.pagewise,
